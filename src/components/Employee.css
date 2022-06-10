@@ -3,7 +3,12 @@
 body {
   background-color: rgb(210, 255, 240);
 }
-h2,p,button,input{
+h2,
+p,
+button,
+input,
+li,
+ul {
   font-family: Poppins !important;
 }
 .employee-card {
@@ -14,6 +19,9 @@ h2,p,button,input{
   border-radius: 5px;
   font-size: 15px;
   margin: 10px 0px;
+  transition: 0.5s;
+  align-items: center;
+  
 }
 
 .row-right {
@@ -70,8 +78,6 @@ h2,p,button,input{
   border-radius: 200px;
 }
 
-
-
 .form-input {
   padding: 10px;
   width: 90%;
@@ -81,19 +87,61 @@ h2,p,button,input{
   display: block;
 }
 
-form{
+form {
   text-align: center;
 }
 
-.form-button{
-  padding: 7px  15px;
+.form-button {
+  padding: 7px 15px;
   background-color: black;
-  border:1px solid black;
+  border: 1px solid black;
   border-radius: 10px;
   color: white;
   margin: auto;
 }
 
-.form-head{
+.form-head {
   margin: 7px auto;
+}
+
+@media (min-width: 990px) {
+  .employee-card,
+  .form-input {
+    width: 60%;
+    margin: 10px auto;
+  }
+  .row-right {
+    width: 28%;
+  }
+}
+
+.moreClick {
+  font-size: 10px;
+  margin: 0;
+}
+.emp-row-ext {
+  overflow: hidden;
+  border-radius: 5px;
+  font-size: 15px;
+  margin: 10px 0px;
+  transition: 0.5s;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.detailList {
+  list-style-type: none;
+  display: flex !important;
+  width: 100% !important;
+  justify-content: space-between;
+  margin: 0;
+  background-color: red;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+.detailListli {
+  margin: 0;
 }
