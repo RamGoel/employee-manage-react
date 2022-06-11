@@ -3,24 +3,26 @@ import React, { useState } from 'react';
 import './Employee.css';
 
 export default class EmployeeList extends React.Component {
+  //class Constructor
   constructor(props) {
     super(props);
     this.state = {
       users: [],
       addingUser: true,
-      rowHeight: '40px',
       name: '',
       phone: '',
       email: '',
       country: '',
-      about: '',
       age: '',
-      dob: '',
       address: '',
+      page: 1,
+      btnText1: 'fa fa-angle-left',
+      btnText2: 'fa fa-angle-right',
     };
     this.loadUsers();
   }
 
+  //Form and Row Components
   AddUserComp = () => {
     return (
       <form action="#">
@@ -69,17 +71,7 @@ export default class EmployeeList extends React.Component {
           placeholder="Country"
           required
         />
-        <input
-          type="text"
-          className="form-input"
-          onChange={(event) =>
-            this.setState((prevState) => ({
-              about: event.target.value,
-            }))
-          }
-          placeholder="About"
-          required
-        />
+
         <input
           type="text"
           className="form-input"
@@ -91,17 +83,7 @@ export default class EmployeeList extends React.Component {
           placeholder="Age"
           required
         />
-        <input
-          type="text"
-          className="form-input"
-          onChange={(event) =>
-            this.setState((prevState) => ({
-              dob: event.target.value,
-            }))
-          }
-          placeholder="Date of Birth"
-          required
-        />
+
         <input
           type="text"
           className="form-input"
@@ -124,110 +106,94 @@ export default class EmployeeList extends React.Component {
     );
   };
 
-  showDetails = (id) => {
-    if (document.getElementById(id).style.height == '120px') {
-      document.getElementById(id).style.height = '50px';
-    } else {
-      document.getElementById(id).style.height = '120px';
-    }
-  };
   EmployeeRow = (props) => {
     return (
-      <div className="emp-row-ext ">
-        <div
-          className="employee-card"
-          id={props.id}
-          style={{ height: this.state.rowHeight }}
-          onClick={() => this.showDetails(props.id)} >
-          <p>
-            <i className="fa fa-user row-icon" />
-            {props.obj.name}
-          </p>
-          <div className="row-right">
-            <p>
-              <i className="fa fa-location-dot row-icon" />
-              {props.obj.country}
-            </p>
-            <i
-              className="fa fa-trash row-icon deleteIcon"
-              onClick={props.obj.delUser}
-            />
-            <i
-              className="fa fa-angle-down row-icon "
-              onClick={() => this.showDetails(props.obj.id)}
-            />
-          </div>
-        </div>
-
-        <div>
-          <ul className="detailList">
-            <li>
-              <i className="fa fa-phone row-icon"></i>
-              {props.obj.phone}
-            </li>
-            <li>
-              <i className="fa fa-envelope row-icon"></i>
-              {props.obj.email}
-            </li>
-            <li>
-              <i className="fa fa-map-marker row-icon"></i>
-              {props.obj.address}
-            </li>
-            <li>
-              <i className="fa fa-child row-icon"></i>
-              {props.obj.age} years old
-            </li>
-          </ul>
-        </div>
-      </div>
+      <tr className="" id={props.id}>
+        <td>
+          <i className="fa fa-user row-icon" />
+          {props.obj.name}
+        </td>
+        <td>
+          <i className="fa fa-phone row-icon"></i>
+          {props.obj.phone}
+        </td>
+        <td>
+          <i className="fa fa-envelope row-icon"></i>
+          {props.obj.email}
+        </td>
+        <td>
+          <i className="fa fa-child row-icon"></i>
+          {props.obj.age} years old
+        </td>
+        <td>
+          <i className="fa fa-location-dot row-icon" />
+          {props.obj.country}
+        </td>
+        <td>{props.obj.address}</td>
+        <td>
+          <button className="deleteIcon">
+            <i className="fa fa-trash row-icon " onClick={props.delUser} />
+          </button>
+        </td>
+      </tr>
     );
   };
 
-  loadUsers = async () => {
+  //Handler Functions for API's
+  loadUsers = async (stri) => {
     await fetch(
-      'https://mockrestapi.herokuapp.com/api/employee?pageNo=2&limit=10'
+      `https://mockrestapi.herokuapp.com/api/employee?pageNo=${this.state.page}&limit=9`
     )
       .then((response) => response.json())
       .then((data) => {
-        this.setState({
-          users: data.data,
-        });
+        if (stri == 'btnText1') {
+          this.setState({
+            users: data.data,
+            btnText1: 'fa fa-angle-left',
+          });
+        } else {
+          this.setState({
+            users: data.data,
+            btnText2: 'fa fa-angle-right',
+          });
+        }
         document.body.style.opacity = 1;
       });
   };
 
   addUser = async () => {
-    if (
-      this.state.name.length > 3 &&
-      this.state.phone.length == 10 &&
-      this.state.email.length > 7 &&
-      this.state.age > 18 &&
-      this.state.address.length > 10 &&
-      this.state.about.length > 5 &&
-      this.state.dob.length > 4
-    ) {
-      const userObj = {
-        name: this.state.name,
-        phone: this.state.phone,
-        email: this.state.email,
-        country: this.state.country,
-        about: this.state.about,
-        age: this.state.age,
-        dob: this.state.dob,
-        address: this.state.address,
-      };
+    // if (
+    //   this.state.name.length > 3 &&
+    //   this.state.phone.length == 10 &&
+    //   this.state.email.length > 7 &&
+    //   this.state.age > 18 &&
+    //   this.state.address.length > 10 &&
+    //   this.state.about.length > 5 &&
+    //   this.state.dob.length > 4
+    // ) {
+    const userObj = {
+      name: this.state.name,
+      phone: this.state.phone,
+      email: this.state.email,
+      country: this.state.country,
+      about: this.state.about,
+      age: this.state.age,
+      dob: this.state.dob,
+      address: this.state.address,
+    };
 
-      console.log(userObj);
-      await fetch('https://mockrestapi.herokuapp.com/api/employee/', {
-        method: 'POST',
-        data: JSON.stringify(userObj),
-      })
-        .then((response) => response.json())
-        .then((data) => alert(data.message));
-    } else {
-      alert('Data is not properly Filled');
-    }
+    console.log(userObj);
+    await fetch('https://mockrestapi.herokuapp.com/api/employee/', {
+      method: 'POST',
+      data: JSON.stringify(userObj),
+    })
+      .then((response) => response.json())
+      .then((data) => alert(data.message));
+    // } else {
+    //   alert('Data is not properly Filled');
+    // }
   };
+
   delUser = async (userId) => {
     document.body.style.opacity = 0.2;
     await fetch(`https://mockrestapi.herokuapp.com/api/employee/${userId}`, {
@@ -238,37 +204,77 @@ export default class EmployeeList extends React.Component {
       .then((data) => {
         this.loadUsers();
       });
-
-    this.loadUsers();
     alert('Employee Deleted');
   };
 
+  //render function of Component
   render() {
     return (
       <div>
         <div className="btnContain">
           <h2 id="home-head">EmployeeAppReact</h2>
-          <button
-            onClick={() => {
-              this.setState({ addingUser: !this.state.addingUser });
-            }}
-            className="click-button"
-          >
-            <i className="fa fa-plus row-icon"></i>
-            {this.state.addingUser ? 'Add Employee' : 'View Employees'}
-          </button>
+          <div className="header-btn">
+            <div className="pagination">
+              <button
+                className="click-button"
+                onClick={() => {
+                  if (this.state.page > 1) {
+                    this.setState({ btnText1: `fa fa-spinner fa-spin` });
+                    this.setState({ page: this.state.page - 1 });
+                    this.loadUsers('btnText1');
+                  } else {
+                    alert('No pages Back!');
+                  }
+                }}
+              >
+                <i className={this.state.btnText1}></i>
+              </button>
+              <p className="pageNum"> {this.state.page} </p>
+              <button
+                className="click-button"
+                onClick={() => {
+                  this.setState({ btnText2: `fa fa-spinner fa-spin` });
+                  this.setState({ page: this.state.page + 1 });
+                  this.loadUsers('btnText2');
+                }}
+              >
+                <i className={this.state.btnText2}></i>
+              </button>
+            </div>
+            <button
+              onClick={() => {
+                this.setState({ addingUser: !this.state.addingUser });
+              }}
+              className="click-button"
+            >
+              <i className="fa fa-plus row-icon"></i>
+              {this.state.addingUser ? 'Add Employee' : 'View Employees'}
+            </button>
+          </div>
         </div>
         <div className="mainDiv">
           {this.state.addingUser ? (
-            this.state.users.map((item) => {
-              return (
-                <this.EmployeeRow
-                  obj={item}
-                  id={item._id}
-                  delUser={() => this.delUser(item._id)}
-                />
-              );
-            })
+            <table className="data-table">
+              <tr>
+                <th>Name</th>
+                <th>phone</th>
+                <th>email</th>
+                <th>age</th>
+                <th>country</th>
+                <th>address</th>
+                <th>Delete</th>
+              </tr>
+
+              {this.state.users.map((item) => {
+                return (
+                  <this.EmployeeRow
+                    obj={item}
+                    id={item._id}
+                    delUser={() => this.delUser(item._id)}
+                  />
+                );
+              })}
+            </table>
           ) : (
             <this.AddUserComp />
           )}
