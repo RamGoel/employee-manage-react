@@ -25,10 +25,14 @@ export default class EmployeeList extends React.Component {
   //Form and Row Components
   AddUserComp = () => {
     return (
-      <form action="#">
+      <form
+        action="https://mockrestapi.herokuapp.com/api/employee/"
+        method="POST"
+      >
         <h2 className="form-head">Add a Employee</h2>
         <input
           type="text"
+          name="name"
           className="form-input"
           onChange={(event) =>
             this.setState((prevState) => ({
@@ -40,6 +44,7 @@ export default class EmployeeList extends React.Component {
         />
         <input
           type="text"
+          name="phone"
           className="form-input"
           onChange={(event) =>
             this.setState((prevState) => ({
@@ -51,6 +56,7 @@ export default class EmployeeList extends React.Component {
         />
         <input
           type="text"
+          name="email"
           className="form-input"
           onChange={(event) =>
             this.setState((prevState) => ({
@@ -62,6 +68,7 @@ export default class EmployeeList extends React.Component {
         />
         <input
           type="text"
+          name="country"
           className="form-input"
           onChange={(event) =>
             this.setState((prevState) => ({
@@ -74,6 +81,7 @@ export default class EmployeeList extends React.Component {
 
         <input
           type="text"
+          name="age"
           className="form-input"
           onChange={(event) =>
             this.setState((prevState) => ({
@@ -86,6 +94,7 @@ export default class EmployeeList extends React.Component {
 
         <input
           type="text"
+          name="address"
           className="form-input"
           onChange={(event) =>
             this.setState((prevState) => ({
@@ -140,8 +149,8 @@ export default class EmployeeList extends React.Component {
   };
 
   //Handler Functions for API's
-  loadUsers = async (stri) => {
-    await fetch(
+  loadUsers = (stri) => {
+    fetch(
       `https://mockrestapi.herokuapp.com/api/employee?pageNo=${this.state.page}&limit=9`
     )
       .then((response) => response.json())
@@ -162,36 +171,29 @@ export default class EmployeeList extends React.Component {
   };
 
   addUser = async () => {
-    // if (
-    //   this.state.name.length > 3 &&
-    //   this.state.phone.length == 10 &&
-    //   this.state.email.length > 7 &&
-    //   this.state.age > 18 &&
-    //   this.state.address.length > 10 &&
-    //   this.state.about.length > 5 &&
-    //   this.state.dob.length > 4
-    // ) {
     const userObj = {
       name: this.state.name,
       phone: this.state.phone,
       email: this.state.email,
       country: this.state.country,
-      about: this.state.about,
       age: this.state.age,
-      dob: this.state.dob,
       address: this.state.address,
     };
 
     console.log(userObj);
-    await fetch('https://mockrestapi.herokuapp.com/api/employee/', {
-      method: 'POST',
-      data: JSON.stringify(userObj),
+
+    fetch('https://mockrestapi.herokuapp.com/api/employee/', {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userObj),
     })
       .then((response) => response.json())
-      .then((data) => alert(data.message));
-    // } else {
-    //   alert('Data is not properly Filled');
-    // }
+      .then((data) => {
+        console.log('Success:', data);
+        alert('New Employee Added');
+      });
   };
 
   delUser = async (userId) => {
@@ -214,6 +216,16 @@ export default class EmployeeList extends React.Component {
         <div className="btnContain">
           <h2 id="home-head">EmployeeAppReact</h2>
           <div className="header-btn">
+            <button
+              className="click-button"
+              onClick={() => {
+                this.innerHTML = `<i className="fa fa-spinner fa-spin" />`;
+                this.loadUsers();
+                this.innerHTML = `<i className="fa fa-refresh" />`;
+              }}
+            >
+              <i className="fa fa-refresh fa-spin"></i>
+            </button>
             <div className="pagination">
               <button
                 className="click-button"
