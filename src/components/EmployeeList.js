@@ -147,11 +147,11 @@ export default class EmployeeList extends React.Component {
         </td>
         <td>{props.obj.address}</td>
         <td>
-          <button className="deleteIcon">
-            <i className="fa fa-trash row-icon " onClick={props.delUser} />
+          <button className="deleteIcon" onClick={props.delUser}>
+            <i className="fa fa-trash row-icon " />
           </button>
-          <button className="deleteIcon">
-            <i className="fa fa-pen row-icon " onClick={props.editUser} />
+          <button className="deleteIcon" onClick={props.editUser}>
+            <i className="fa fa-pen row-icon " />
           </button>
         </td>
       </tr>
@@ -159,8 +159,8 @@ export default class EmployeeList extends React.Component {
   };
 
   //Handler Functions for API's
-  loadUsers = (stri) => {
-    fetch(
+  loadUsers = async (stri) => {
+    await fetch(
       `https://mockrestapi.herokuapp.com/api/employee?pageNo=${this.state.page}&limit=9`
     )
       .then((response) => response.json())
@@ -170,11 +170,18 @@ export default class EmployeeList extends React.Component {
             users: data.data,
             btnText1: 'fa fa-angle-left',
           });
-        } else {
+          this.loadUsers('');
+        } else if (stri == 'btnText2') {
           this.setState({
             users: data.data,
             btnText2: 'fa fa-angle-right',
           });
+          this.loadUsers('');
+        } else {
+          this.setState({
+            users: data.data,
+          });
+          this.loadUsers('');
         }
         document.body.style.opacity = 1;
       });
@@ -206,7 +213,7 @@ export default class EmployeeList extends React.Component {
       .then((data) => {
         console.log('Success:', data);
         alert('New Employee Added');
-        this.loadUsers();
+        this.loadUsers('');
         this.setState({
           addingUser: !this.state.addingUser,
           formBtnText: `Add New User`,
@@ -214,49 +221,21 @@ export default class EmployeeList extends React.Component {
       });
   };
 
-  editUser = async () => {
+  editUser = async (data) => {
     this.setState({
-      formBtnText: <i className="fa fa-spinner fa-spin"></i>,
+      formBtnText: 'Update User', //<i className="fa fa-spinner fa-spin"></i>,
     });
-    fetch('https://mockrestapi.herokuapp.com/api/employee/')
-      .then((res) => {
-        res.json();
-      })
-      .then((data) => {
+
         this.setState({
-          editObj: data,
+          name: data.name,
+          phone: data.phone,
+          email: data.email,
+          country: data.country,
+          age: data.age,
+          address: data.address,
           addingUser: false,
         });
-      });
 
-    const userObj = {
-      name: this.state.name,
-      phone: this.state.phone,
-      email: this.state.email,
-      country: this.state.country,
-      age: this.state.age,
-      address: this.state.address,
-    };
-
-    console.log(userObj);
-
-    fetch('https://mockrestapi.herokuapp.com/api/employee/', {
-      method: 'PUT', // or 'PUT'
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userObj),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Success:', data);
-        alert('Employee Updated');
-        this.loadUsers();
-        this.setState({
-          addingUser: !this.state.addingUser,
-          formBtnText: `Update User`,
-        });
-      });
   };
 
   delUser = async (userId) => {
@@ -267,7 +246,7 @@ export default class EmployeeList extends React.Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        this.loadUsers();
+        this.loadUsers('');
       });
     alert('Employee Deleted');
   };
@@ -336,7 +315,7 @@ export default class EmployeeList extends React.Component {
                     obj={item}
                     id={item._id}
                     delUser={() => this.delUser(item._id)}
-                    editUser={() => this.editUser(item._id)}
+                    editUser={() => this.editUser(item)}
                   />
                 );
               })}
