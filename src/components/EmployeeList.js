@@ -24,7 +24,7 @@ export default class EmployeeList extends React.Component {
   }
 
   //Form and Row Components
-  AddUserForm = () => {
+  AddUserForm = (props) => {
     return (
       <form
         action="https://mockrestapi.herokuapp.com/api/employee/"
@@ -39,6 +39,7 @@ export default class EmployeeList extends React.Component {
           type="text"
           name="name"
           className="form-input"
+          value={this.state.name}
           onChange={(event) =>
             this.setState((prevState) => ({
               name: event.target.value,
@@ -51,6 +52,7 @@ export default class EmployeeList extends React.Component {
           type="Number"
           name="phone"
           className="form-input"
+          value={this.state.phone}
           onChange={(event) =>
             this.setState((prevState) => ({
               phone: event.target.value,
@@ -63,6 +65,7 @@ export default class EmployeeList extends React.Component {
           type="text"
           name="email"
           className="form-input"
+          value={this.state.email}
           onChange={(event) =>
             this.setState((prevState) => ({
               email: event.target.value,
@@ -75,6 +78,7 @@ export default class EmployeeList extends React.Component {
           type="text"
           name="country"
           className="form-input"
+          value={this.state.country}
           onChange={(event) =>
             this.setState((prevState) => ({
               country: event.target.value,
@@ -88,6 +92,7 @@ export default class EmployeeList extends React.Component {
           type="number"
           name="age"
           className="form-input"
+          value={this.state.age}
           onChange={(event) =>
             this.setState((prevState) => ({
               age: event.target.value,
@@ -101,6 +106,7 @@ export default class EmployeeList extends React.Component {
           type="text"
           name="address"
           className="form-input"
+          value={this.state.address}
           onChange={(event) =>
             this.setState((prevState) => ({
               address: event.target.value,
@@ -143,6 +149,9 @@ export default class EmployeeList extends React.Component {
         <td>
           <button className="deleteIcon">
             <i className="fa fa-trash row-icon " onClick={props.delUser} />
+          </button>
+          <button className="deleteIcon">
+            <i className="fa fa-pen row-icon " onClick={props.editUser} />
           </button>
         </td>
       </tr>
@@ -201,6 +210,51 @@ export default class EmployeeList extends React.Component {
         this.setState({
           addingUser: !this.state.addingUser,
           formBtnText: `Add New User`,
+        });
+      });
+  };
+
+  editUser = async () => {
+    this.setState({
+      formBtnText: <i className="fa fa-spinner fa-spin"></i>,
+    });
+    fetch('https://mockrestapi.herokuapp.com/api/employee/')
+      .then((res) => {
+        res.json();
+      })
+      .then((data) => {
+        this.setState({
+          editObj: data,
+          addingUser: false,
+        });
+      });
+
+    const userObj = {
+      name: this.state.name,
+      phone: this.state.phone,
+      email: this.state.email,
+      country: this.state.country,
+      age: this.state.age,
+      address: this.state.address,
+    };
+
+    console.log(userObj);
+
+    fetch('https://mockrestapi.herokuapp.com/api/employee/', {
+      method: 'PUT', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userObj),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data);
+        alert('Employee Updated');
+        this.loadUsers();
+        this.setState({
+          addingUser: !this.state.addingUser,
+          formBtnText: `Update User`,
         });
       });
   };
@@ -282,6 +336,7 @@ export default class EmployeeList extends React.Component {
                     obj={item}
                     id={item._id}
                     delUser={() => this.delUser(item._id)}
+                    editUser={() => this.editUser(item._id)}
                   />
                 );
               })}
