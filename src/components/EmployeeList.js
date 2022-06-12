@@ -163,7 +163,6 @@ export default class EmployeeList extends React.Component {
   loadUsers = async (stri) => {
     await fetch(
       `https://mockrestapi.herokuapp.com/api/employee?pageNo=${this.state.page}&limit=9`
-      // `https://hub.dummyapis.com/employee?noofRecords=9`
     )
       .then((response) => response.json())
       .then((data) => {
