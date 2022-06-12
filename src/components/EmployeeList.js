@@ -163,6 +163,7 @@ export default class EmployeeList extends React.Component {
   loadUsers = async (stri) => {
     await fetch(
       `https://mockrestapi.herokuapp.com/api/employee?pageNo=${this.state.page}&limit=9`
+      // `https://hub.dummyapis.com/employee?noofRecords=9`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -204,7 +205,7 @@ export default class EmployeeList extends React.Component {
     console.log(userObj);
 
     fetch('https://mockrestapi.herokuapp.com/api/employee/', {
-      method: 'POST', // or 'PUT'
+      method: 'POST', // or 'POST'
       headers: {
         'Content-Type': 'application/json',
       },
@@ -236,6 +237,8 @@ export default class EmployeeList extends React.Component {
       address: data.address,
       addingUser: false,
     });
+
+    this.delUser(data._id);
   };
 
   delUser = async (userId) => {
@@ -252,7 +255,7 @@ export default class EmployeeList extends React.Component {
         this.setState({
           dltText: 'fa fa-trash row-icon',
         });
-        alert('Employee Deleted');
+        // alert('Employee Deleted');
       });
   };
 
