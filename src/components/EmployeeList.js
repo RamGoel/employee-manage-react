@@ -19,6 +19,7 @@ export default class EmployeeList extends React.Component {
       btnText1: 'fa fa-angle-left',
       btnText2: 'fa fa-angle-right',
       formBtnText: 'Add New Employee',
+      dltText: 'fa fa-trash row-icon',
     };
     this.loadUsers();
   }
@@ -148,10 +149,10 @@ export default class EmployeeList extends React.Component {
         <td>{props.obj.address}</td>
         <td>
           <button className="deleteIcon" onClick={props.delUser}>
-            <i className="fa fa-trash row-icon " />
+            <i className={this.state.dltText} />
           </button>
           <button className="deleteIcon" onClick={props.editUser}>
-            <i className="fa fa-pen row-icon " />
+            <i className="fa fa-pen row-icon" />
           </button>
         </td>
       </tr>
@@ -226,20 +227,21 @@ export default class EmployeeList extends React.Component {
       formBtnText: 'Update User', //<i className="fa fa-spinner fa-spin"></i>,
     });
 
-        this.setState({
-          name: data.name,
-          phone: data.phone,
-          email: data.email,
-          country: data.country,
-          age: data.age,
-          address: data.address,
-          addingUser: false,
-        });
-
+    this.setState({
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      country: data.country,
+      age: data.age,
+      address: data.address,
+      addingUser: false,
+    });
   };
 
   delUser = async (userId) => {
-    document.body.style.opacity = 0.2;
+    this.setState({
+      dltText: 'fa fa-spinner fa-spin row-icon',
+    });
     await fetch(`https://mockrestapi.herokuapp.com/api/employee/${userId}`, {
       method: 'DELETE',
       // data:JSON.stringify(data)
@@ -247,8 +249,11 @@ export default class EmployeeList extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         this.loadUsers('');
+        this.setState({
+          dltText: 'fa fa-trash row-icon',
+        });
+        alert('Employee Deleted');
       });
-    alert('Employee Deleted');
   };
 
   //render function of Component
