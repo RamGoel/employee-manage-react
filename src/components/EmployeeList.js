@@ -18,16 +18,21 @@ export default class EmployeeList extends React.Component {
       page: 1,
       btnText1: 'fa fa-angle-left',
       btnText2: 'fa fa-angle-right',
+      formBtnText: 'Add New Employee',
     };
     this.loadUsers();
   }
 
   //Form and Row Components
-  AddUserComp = () => {
+  AddUserForm = () => {
     return (
       <form
         action="https://mockrestapi.herokuapp.com/api/employee/"
         method="POST"
+        onSubmit={(e) => {
+          e.preventDefault();
+          this.addUser();
+        }}
       >
         <h2 className="form-head">Add a Employee</h2>
         <input
@@ -43,7 +48,7 @@ export default class EmployeeList extends React.Component {
           required
         />
         <input
-          type="text"
+          type="Number"
           name="phone"
           className="form-input"
           onChange={(event) =>
@@ -80,7 +85,7 @@ export default class EmployeeList extends React.Component {
         />
 
         <input
-          type="text"
+          type="number"
           name="age"
           className="form-input"
           onChange={(event) =>
@@ -104,12 +109,8 @@ export default class EmployeeList extends React.Component {
           placeholder="Address"
           required
         />
-        <button
-          className="form-button"
-          type="button"
-          onClick={() => this.addUser()}
-        >
-          Add New User
+        <button className="form-button" type="submit">
+          {this.state.formBtnText}
         </button>
       </form>
     );
@@ -171,6 +172,9 @@ export default class EmployeeList extends React.Component {
   };
 
   addUser = async () => {
+    this.setState({
+      formBtnText: <i className="fa fa-spinner fa-spin"></i>,
+    });
     const userObj = {
       name: this.state.name,
       phone: this.state.phone,
@@ -193,6 +197,11 @@ export default class EmployeeList extends React.Component {
       .then((data) => {
         console.log('Success:', data);
         alert('New Employee Added');
+        this.loadUsers();
+        this.setState({
+          addingUser: !this.state.addingUser,
+          formBtnText: `Add New User`,
+        });
       });
   };
 
@@ -216,16 +225,6 @@ export default class EmployeeList extends React.Component {
         <div className="btnContain">
           <h2 id="home-head">EmployeeAppReact</h2>
           <div className="header-btn">
-            <button
-              className="click-button"
-              onClick={() => {
-                this.innerHTML = `<i className="fa fa-spinner fa-spin" />`;
-                this.loadUsers();
-                this.innerHTML = `<i className="fa fa-refresh" />`;
-              }}
-            >
-              <i className="fa fa-refresh fa-spin"></i>
-            </button>
             <div className="pagination">
               <button
                 className="click-button"
@@ -288,7 +287,7 @@ export default class EmployeeList extends React.Component {
               })}
             </table>
           ) : (
-            <this.AddUserComp />
+            <this.AddUserForm />
           )}
         </div>
       </div>
