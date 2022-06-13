@@ -294,7 +294,15 @@ export default class EmployeeList extends React.Component {
             </div>
             <button
               onClick={() => {
-                this.setState({ addingUser: !this.state.addingUser });
+                this.setState({
+                  addingUser: !this.state.addingUser,
+                  name: '',
+                  email: '',
+                  phone: '',
+                  age: '',
+                  address: '',
+                  country: '',
+                });
               }}
               className="click-button"
             >
