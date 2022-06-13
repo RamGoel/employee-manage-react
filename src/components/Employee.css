@@ -13,6 +13,10 @@ table {
   font-family: Poppins !important;
 }
 
+td {
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
 .employee-card p {
   margin: 5px;
   text-align: left;
