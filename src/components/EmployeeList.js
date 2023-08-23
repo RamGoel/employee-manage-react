@@ -10,11 +10,8 @@ export default class EmployeeList extends React.Component {
       users: [],
       addingUser: true,
       name: '',
-      phone: '',
-      email: '',
-      country: '',
       age: '',
-      address: '',
+      salary: '',
       page: 1,
       btnText1: 'fa fa-angle-left',
       btnText2: 'fa fa-angle-right',
@@ -28,7 +25,7 @@ export default class EmployeeList extends React.Component {
   AddUserForm = (props) => {
     return (
       <form
-        action="https://mockrestapi.herokuapp.com/api/employee/"
+        action="https://dummy.restapiexample.com/api/v1/create"
         method="POST"
         onSubmit={(e) => {
           e.preventDefault();
@@ -49,45 +46,6 @@ export default class EmployeeList extends React.Component {
           placeholder="Full Name"
           required
         />
-        <input
-          type="Number"
-          name="phone"
-          className="form-input"
-          value={this.state.phone}
-          onChange={(event) =>
-            this.setState((prevState) => ({
-              phone: event.target.value,
-            }))
-          }
-          placeholder="Phone Number"
-          required
-        />
-        <input
-          type="text"
-          name="email"
-          className="form-input"
-          value={this.state.email}
-          onChange={(event) =>
-            this.setState((prevState) => ({
-              email: event.target.value,
-            }))
-          }
-          placeholder="E-mail"
-          required
-        />
-        <input
-          type="text"
-          name="country"
-          className="form-input"
-          value={this.state.country}
-          onChange={(event) =>
-            this.setState((prevState) => ({
-              country: event.target.value,
-            }))
-          }
-          placeholder="Country"
-          required
-        />
 
         <input
           type="number"
@@ -104,16 +62,16 @@ export default class EmployeeList extends React.Component {
         />
 
         <input
-          type="text"
+          type="number"
           name="address"
           className="form-input"
-          value={this.state.address}
+          value={this.state.salary}
           onChange={(event) =>
             this.setState((prevState) => ({
-              address: event.target.value,
+              salary: event.target.value,
             }))
           }
-          placeholder="Address"
+          placeholder="Salary"
           required
         />
         <button className="form-button" type="submit">
@@ -162,7 +120,7 @@ export default class EmployeeList extends React.Component {
   //Handler Functions for API's
   loadUsers = async (stri) => {
     await fetch(
-      `https://mockrestapi.herokuapp.com/api/employee?pageNo=${this.state.page}&limit=9`
+      `https://dummy.restapiexample.com/api/v1/employees`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -194,16 +152,13 @@ export default class EmployeeList extends React.Component {
     });
     const userObj = {
       name: this.state.name,
-      phone: this.state.phone,
-      email: this.state.email,
-      country: this.state.country,
       age: this.state.age,
-      address: this.state.address,
+      salary: this.state.salary,
     };
 
     console.log(userObj);
 
-    fetch('https://mockrestapi.herokuapp.com/api/employee/', {
+    fetch('https://dummy.restapiexample.com/api/v1/create', {
       method: 'POST', // or 'POST'
       headers: {
         'Content-Type': 'application/json',
@@ -244,9 +199,8 @@ export default class EmployeeList extends React.Component {
     this.setState({
       dltText: 'fa fa-spinner fa-spin row-icon',
     });
-    await fetch(`https://mockrestapi.herokuapp.com/api/employee/${userId}`, {
+    await fetch(`https://dummy.restapiexample.com/api/v1/delete/${userId}`, {
       method: 'DELETE',
-      // data:JSON.stringify(data)
     })
       .then((response) => response.json())
       .then((data) => {
@@ -297,11 +251,8 @@ export default class EmployeeList extends React.Component {
                 this.setState({
                   addingUser: !this.state.addingUser,
                   name: '',
-                  email: '',
-                  phone: '',
                   age: '',
-                  address: '',
-                  country: '',
+                  salary: '',
                 });
               }}
               className="click-button"
@@ -316,20 +267,17 @@ export default class EmployeeList extends React.Component {
             <table className="data-table">
               <tr>
                 <th>Name</th>
-                <th>phone</th>
-                <th>email</th>
                 <th>age</th>
-                <th>country</th>
-                <th>address</th>
+                <th>salary</th>
                 <th>Delete</th>
               </tr>
 
-              {this.state.users.map((item) => {
+              {this.state.users.data.map((item) => {
                 return (
                   <this.EmployeeRow
                     obj={item}
                     id={item._id}
-                    delUser={() => this.delUser(item._id)}
+                    delUser={() => this.delUser(item.id)}
                     editUser={() => this.editUser(item)}
                   />
                 );
